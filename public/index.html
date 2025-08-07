@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon CRUD App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-database"></i>
+                <h1>GsGen</h1>
+            </div>
+            <nav class="header-nav">
+                <button class="nav-btn" onclick="showCreateTable()">
+                    <i class="fas fa-table"></i>
+                    Create Table
+                </button>
+                <button class="nav-btn" onclick="showAllRecords()">
+                    <i class="fas fa-list"></i>
+                    View Records
+                </button>
+                <button class="nav-btn" onclick="checkHealth()">
+                    <i class="fas fa-heartbeat"></i>
+                    Health Check
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Panel -->
+        <aside class="left-panel">
+            <h3>Operations</h3>
+            <ul class="operation-list">
+                <li>
+                    <button class="operation-btn active" onclick="showNewEntry()">
+                        <i class="fas fa-plus"></i>
+                        New Entry
+                    </button>
+                </li>
+                <li>
+                    <button class="operation-btn" onclick="showGetRecord()">
+                        <i class="fas fa-search"></i>
+                        Get Record
+                    </button>
+                </li>
+                <li>
+                    <button class="operation-btn" onclick="showUpdateRecord()">
+                        <i class="fas fa-edit"></i>
+                        Update Record
+                    </button>
+                </li>
+                <li>
+                    <button class="operation-btn" onclick="showDeleteRecord()">
+                        <i class="fas fa-trash"></i>
+                        Delete Record
+                    </button>
+                </li>
+                <li>
+                    <button class="operation-btn" onclick="showAllRecords()">
+                        <i class="fas fa-list-ul"></i>
+                        List All Records
+                    </button>
+                </li>
+                <li>
+                    <button class="operation-btn" onclick="showCreateSlide()">
+                        <i class="fab fa-google"></i>
+                        Create Google Slide
+                    </button>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="content-area">
+            <div id="welcome-screen" class="screen active">
+                <div class="welcome-content">
+                    <i class="fas fa-database welcome-icon"></i>
+                    <h2>Welcome to Neon CRUD Manager</h2>
+                    <p>Select an operation from the left panel to get started</p>
+                </div>
+            </div>
+
+            <!-- New Entry Screen -->
+            <div id="new-entry-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-plus"></i> Create New Entry</h2>
+                </div>
+                <div class="form-container">
+                    <label for="json-input">Enter JSON Data:</label>
+                    <textarea 
+                        id="json-input" 
+                        placeholder='{"name": "John Doe", "email": "john@example.com", "age": 30}'
+                        rows="8">
+                    </textarea>
+                    <div class="button-group">
+                        <button class="primary-btn" onclick="createRecord()">
+                            <i class="fas fa-save"></i>
+                            Create Record
+                        </button>
+                        <button class="secondary-btn" onclick="clearForm()">
+                            <i class="fas fa-eraser"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Record Screen -->
+            <div id="get-record-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-search"></i> Get Record by ID</h2>
+                </div>
+                <div class="form-container">
+                    <label for="record-id">Record ID:</label>
+                    <input type="number" id="record-id" placeholder="Enter record ID">
+                    <div class="button-group">
+                        <button class="primary-btn" onclick="getRecord()">
+                            <i class="fas fa-search"></i>
+                            Get Record
+                        </button>
+                    </div>
+                </div>
+                <div id="record-display" class="record-display hidden"></div>
+            </div>
+
+            <!-- Update Record Screen -->
+            <div id="update-record-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-edit"></i> Update Record</h2>
+                </div>
+                <div class="form-container">
+                    <label for="update-id">Record ID to Update:</label>
+                    <input type="number" id="update-id" placeholder="Enter record ID">
+                    <button class="secondary-btn" onclick="loadRecordForUpdate()">
+                        <i class="fas fa-download"></i>
+                        Load Current Data
+                    </button>
+                    
+                    <label for="update-json-input">Updated JSON Data:</label>
+                    <textarea 
+                        id="update-json-input" 
+                        placeholder='{"name": "John Doe", "email": "john@example.com", "age": 30}'
+                        rows="8">
+                    </textarea>
+                    <div class="button-group">
+                        <button class="primary-btn" onclick="updateRecord()">
+                            <i class="fas fa-save"></i>
+                            Update Record
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Record Screen -->
+            <div id="delete-record-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-trash"></i> Delete Record</h2>
+                </div>
+                <div class="form-container">
+                    <label for="delete-id">Record ID to Delete:</label>
+                    <input type="number" id="delete-id" placeholder="Enter record ID">
+                    <div class="button-group">
+                        <button class="danger-btn" onclick="deleteRecord()">
+                            <i class="fas fa-trash"></i>
+                            Delete Record
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List All Records Screen -->
+            <div id="list-records-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-list-ul"></i> All Records</h2>
+                    <div class="pagination-controls">
+                        <button id="prev-page" class="pagination-btn" onclick="changePage(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-page" class="pagination-btn" onclick="changePage(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="records-table" class="records-table"></div>
+            </div>
+
+            <!-- Create Google Slide Screen -->
+            <div id="create-slide-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fab fa-google"></i> Create Google Slide</h2>
+                </div>
+                <div class="form-container">
+                    <div class="google-slide-info">
+                        <div class="info-card">
+                            <i class="fab fa-google-drive"></i>
+                            <h4>Google Slides Integration</h4>
+                            <p>Create a new presentation directly in your Google Drive</p>
+                        </div>
+                    </div>
+
+                    <label for="slide-title">Presentation Title:</label>
+                    <input type="text" id="slide-title" placeholder="Enter presentation title" required>
+                    
+                    <label for="slide-content">Slide Content:</label>
+                    <textarea 
+                        id="slide-content" 
+                        placeholder="Enter the main content for your slide..."
+                        rows="6">
+                    </textarea>
+
+                    <div class="slide-options">
+                        <h4>Slide Options</h4>
+                        <div class="option-group">
+                            <label for="slide-layout">Layout:</label>
+                            <select id="slide-layout">
+                                <option value="TITLE_AND_BODY">Title and Body</option>
+                                <option value="TITLE_ONLY">Title Only</option>
+                                <option value="SECTION_HEADER">Section Header</option>
+                                <option value="TWO_COLUMNS_TITLE_AND_BODY">Two Columns</option>
+                                <option value="BLANK">Blank</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="slide-theme">Theme:</label>
+                            <select id="slide-theme">
+                                <option value="default">Default</option>
+                                <option value="modern">Modern</option>
+                                <option value="simple">Simple Light</option>
+                                <option value="geometric">Geometric</option>
+                                <option value="swiss">Swiss</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="primary-btn" onclick="createGoogleSlide()">
+                            <i class="fab fa-google"></i>
+                            Create Slide
+                        </button>
+                        <button class="secondary-btn" onclick="clearSlideForm()">
+                            <i class="fas fa-eraser"></i>
+                            Clear
+                        </button>
+                        <button class="secondary-btn" onclick="addSlideExample()">
+                            <i class="fas fa-lightbulb"></i>
+                            Example
+                        </button>
+                    </div>
+
+                    <div id="slide-result" class="slide-result hidden">
+                        <div class="result-card">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Slide Created Successfully!</h4>
+                            <p id="slide-link-text">Your presentation has been created</p>
+                            <a id="slide-link" href="#" target="_blank" class="slide-link-btn">
+                                <i class="fas fa-external-link-alt"></i>
+                                Open in Google Slides
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div id="result-message" class="result-message hidden"></div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>&copy; 2024 Neon CRUD App. Built with Node.js & PostgreSQL</p>
+            </div>
+            <div class="footer-right">
+                <span id="connection-status" class="status-indicator">
+                    <i class="fas fa-circle"></i>
+                    Checking connection...
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-backdrop"></div>
+        <div class="loading-container">
+            <div class="loading-animation">
+                <div class="spinner-main"></div>
+                <div class="spinner-orbit"></div>
+                <div class="spinner-orbit-2"></div>
+                <div class="loading-dots">
+                    <div class="dot dot-1"></div>
+                    <div class="dot dot-2"></div>
+                    <div class="dot dot-3"></div>
+                </div>
+            </div>
+            <div class="loading-text">
+                <span class="loading-word">Loading</span>
+                <span class="loading-dots-text">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
